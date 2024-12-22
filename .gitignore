@@ -6,6 +6,8 @@ __pycache__/
 # Ignore virtual environment directories
 venv/
 .env/
+env/
+.venv/
 
 # Ignore dependency directories
 *.egg-info/
@@ -24,3 +26,11 @@ build/
 # Ignore Docker-related files
 Dockerfile*
 docker-compose.yml
+
+# Ignore .env and related environment files
+.env
+env/
+
+# Ignore test.py
+test.py
+
