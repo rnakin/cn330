@@ -75,7 +75,7 @@ def main():
         print("Available services and APIs:")
         print("- ipgeolocation.io API for location data")
         print("- OpenWeatherMap API for current weather data")
-        #print("- Check if it's a good day to hang laundry")
+        print("- Check if it's a good day to hang laundry")
         return
 
     # Handle --laundry option
@@ -84,10 +84,8 @@ def main():
         print("\033[1m\033[38;5;213mThis tool helps you decide if it's a suitable day for hanging laundry.\033[0m")
         print("\033[38;5;213m______________________________________________________________________\033[0m")
 
-
         city = input("Please enter the city (e.g., Bangkok): ").strip()  
         target_time_str = input("Please enter the time (YYYY-MM-DD HH:MM:SS): ").strip()
-        print()
         
         try:
             target_time = datetime.strptime(target_time_str, "%Y-%m-%d %H:%M:%S")
