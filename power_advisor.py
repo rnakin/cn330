@@ -3,7 +3,6 @@ import requests
 API_KEY = "44c5e66627efa3057184a1b9ede5618b"
 
 def fetch_weather(location):
-    """ดึงข้อมูลสภาพอากาศ"""
     url = f"http://api.openweathermap.org/data/2.5/weather?q={location}&appid={API_KEY}&units=metric"
     response = requests.get(url)
     if response.status_code == 200:
@@ -12,7 +11,6 @@ def fetch_weather(location):
         raise Exception(f"Failed to fetch weather data: {response.status_code}")
 
 def fetch_forecast(location):
-    """ดึงข้อมูลพยากรณ์อากาศ"""
     url = f"http://api.openweathermap.org/data/2.5/forecast?q={location}&appid={API_KEY}&units=metric"
     response = requests.get(url)
     if response.status_code == 200:
@@ -21,7 +19,6 @@ def fetch_forecast(location):
         raise Exception(f"Failed to fetch forecast data: {response.status_code}")
 
 def get_power_advice(location, show_temp=False, show_humidity=False):
-    """ให้คำแนะนำการใช้พลังงานตามสภาพอากาศปัจจุบัน"""
     weather_data = fetch_weather(location)
     temp = weather_data["main"]["temp"]
     humidity = weather_data["main"]["humidity"]
@@ -49,7 +46,6 @@ def get_power_advice(location, show_temp=False, show_humidity=False):
     return advice
 
 def calculate_power_cost(rate, usage):
-    """คำนวณค่าไฟตามการใช้งานอุปกรณ์"""
     power_data = {"AC": 1.5, "Fan": 0.07, "Heater": 2.0}
     usage_data = {item.split(":")[0]: float(item.split(":")[1]) for item in usage.split(",")}
 
@@ -66,7 +62,6 @@ def calculate_power_cost(rate, usage):
     return breakdown + f"\nTotal Cost: {total_cost:.2f} USD/day"
 
 def forecast_advice(location, days=None):
-    """ให้คำแนะนำตามพยากรณ์อากาศ"""
     forecast_data = fetch_forecast(location)
     if "list" not in forecast_data or len(forecast_data["list"]) == 0:
             return f"No forecast data available for {location}."
