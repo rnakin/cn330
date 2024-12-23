@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-annotated-types==0.7.0
-anyio==4.6.2.post1
-certifi==2024.12.14  # เลือกเวอร์ชันที่อัปเดตจาก upstream
-charset-normalizer==3.4.0
-click==8.1.7
-=======
->>>>>>> ed92e35cde7eca5530969f7c462db1fca3c00673
 colorama==0.4.6
 dnspython==2.7.0
 email_validator==2.2.0
@@ -40,20 +32,9 @@ pydantic_core==2.23.4
 Pygments==2.18.0
 python-multipart==0.0.17
 PyYAML==6.0.2
-requests==2.32.3  # ใช้เวอร์ชันที่มีการอัปเดตจาก upstream
+requests==2.32.3 
 rich==13.9.4
 shellingham==1.5.4
-<<<<<<< HEAD
-sniffio==1.3.1
-starlette==0.41.2
-typer==0.13.0
-typing_extensions==4.12.2
-urllib3==2.3.0  # เวอร์ชันจาก upstream
-uvicorn==0.32.0
-watchfiles==0.24.0
-websockets==14.0
-=======
->>>>>>> ed92e35cde7eca5530969f7c462db1fca3c00673
 
 certifi==2024.12.14
 charset-normalizer==3.4.0
