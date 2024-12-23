@@ -25,5 +25,11 @@ build/
 # Ignore Docker-related files
 Dockerfile*
 docker-compose.yml
+
+# Ignore .env and related environment files
+.env
+env/
+
+# Ignore test.py
 test.py
 
