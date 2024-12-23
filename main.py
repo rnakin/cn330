@@ -3,10 +3,17 @@ import requests
 import os
 from datetime import datetime
 from dotenv import load_dotenv
+<<<<<<< HEAD
 from ns import get_ip, is_ip
 from dryday_to_laundry import dryday_to_laundry
 
 load_dotenv()  # will search for .env file in local folder and load variables 
+=======
+from ns import get_ip ,is_ip
+from take_things_out import take_things_out
+
+load_dotenv() # will search for .env file in local folder and load variables 
+>>>>>>> 5ae8c0775dccbfae0801b7d60e9b84bcd090b3db
 
 # API Endpoints
 IPGEO_API_URL = "https://api.ipgeolocation.io/ipgeo"
@@ -52,21 +59,46 @@ def format_output(domain, location_data, weather_data):
     Temperature: {temp}°C, Humidity: {humidity}%
     {time} GMT {location_data['time_zone']['offset']}
     """
+<<<<<<< HEAD
     return text
 
 def main():
     parser = argparse.ArgumentParser(description="HowIs: A CLI tool to check location and weather of a domain/IP.")
     parser.add_argument(
         "query", nargs="?", type=str, help="Domain name, IPv4, or IPv6 address. Example: google.com or 8.8.8.8"
+=======
+
+    return text
+
+def main():
+
+    parser = argparse.ArgumentParser(
+        description="HowIs: A CLI tool to check location and weather of a domain/IP."
+    )
+    parser.add_argument(
+        "query",
+        nargs="?",
+        type=str,
+        help="Domain name, IPv4, or IPv6 address. Example: google.com or 8.8.8.8",
+>>>>>>> 5ae8c0775dccbfae0801b7d60e9b84bcd090b3db
     )
     parser.add_argument(
         "--now", action="store_true", help="Fetch current weather (default behavior)."
     )
     parser.add_argument(
+<<<<<<< HEAD
         "--list", action="store_true", help="List available services and APIs used in this application."
     )
     parser.add_argument(
         "--laundry", action="store_true", help="Check if it's a good day to hang laundry."
+=======
+        "--list",
+        action="store_true",
+        help="List available services and APIs used in this application.",
+    )
+    parser.add_argument(
+        "--take_things", action="store_true", help="Check what items you should take out today. eg, umbrella, hat."
+>>>>>>> 5ae8c0775dccbfae0801b7d60e9b84bcd090b3db
     )
     args = parser.parse_args()
 
@@ -75,6 +107,7 @@ def main():
         print("Available services and APIs:")
         print("- ipgeolocation.io API for location data")
         print("- OpenWeatherMap API for current weather data")
+<<<<<<< HEAD
         print("- Check if it's a good day to hang laundry")
         return
 
@@ -94,6 +127,20 @@ def main():
             return
         
         result = dryday_to_laundry(city, target_time)
+=======
+        print("- Check what items you should take out today. eg, umbrella, hat.")
+        return
+    
+    # Handle --take_things option
+    if args.take_things:
+        print()
+        print("\033[1m\033[38;5;213mThis tool helps you prepare things before go out.\033[0m")
+        print("\033[38;5;213m______________________________________________________________________\033[0m")
+        
+        city = input("Please enter the city (e.g., Bangkok): ").strip() 
+        
+        result = take_things_out(city)
+>>>>>>> 5ae8c0775dccbfae0801b7d60e9b84bcd090b3db
         print(result)
         return
 
@@ -116,4 +163,8 @@ def main():
     print(text)
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     main()
+=======
+    main()
+>>>>>>> 5ae8c0775dccbfae0801b7d60e9b84bcd090b3db
