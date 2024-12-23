@@ -1,4 +1,5 @@
 # Ignore Python bytecode files
+<<<<<<< HEAD
 *.pyc
 *.pyo
 __pycache__/ 
@@ -33,3 +34,7 @@ env/
 # Ignore test.py
 test.py
 
+=======
+__pycache__
+*.pyc
+>>>>>>> 5ae8c0775dccbfae0801b7d60e9b84bcd090b3db
