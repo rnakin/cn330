@@ -3,9 +3,10 @@ import requests
 import os
 from datetime import datetime
 from dotenv import load_dotenv
-from ns import get_ip ,is_ip
+from ns import get_ip, is_ip
+from dryday_to_laundry import dryday_to_laundry
 
-load_dotenv() # will search for .env file in local folder and load variables 
+load_dotenv()  # will search for .env file in local folder and load variables 
 
 # API Endpoints
 IPGEO_API_URL = "https://api.ipgeolocation.io/ipgeo"
@@ -51,30 +52,21 @@ def format_output(domain, location_data, weather_data):
     Temperature: {temp}°C, Humidity: {humidity}%
     {time} GMT {location_data['time_zone']['offset']}
     """
-
     return text
 
 def main():
-
-    parser = argparse.ArgumentParser(
-        description="HowIs: A CLI tool to check location and weather of a domain/IP."
-    )
+    parser = argparse.ArgumentParser(description="HowIs: A CLI tool to check location and weather of a domain/IP.")
     parser.add_argument(
-        "query",
-        nargs="?",
-        type=str,
-        help="Domain name, IPv4, or IPv6 address. Example: google.com or 8.8.8.8",
+        "query", nargs="?", type=str, help="Domain name, IPv4, or IPv6 address. Example: google.com or 8.8.8.8"
     )
     parser.add_argument(
         "--now", action="store_true", help="Fetch current weather (default behavior)."
     )
     parser.add_argument(
-        "--list",
-        action="store_true",
-        help="List available services and APIs used in this application.",
+        "--list", action="store_true", help="List available services and APIs used in this application."
     )
     parser.add_argument(
-        "--test", action="store_true", help="testing"
+        "--laundry", action="store_true", help="Check if it's a good day to hang laundry."
     )
     args = parser.parse_args()
 
@@ -83,6 +75,26 @@ def main():
         print("Available services and APIs:")
         print("- ipgeolocation.io API for location data")
         print("- OpenWeatherMap API for current weather data")
+        print("- Check if it's a good day to hang laundry")
+        return
+
+    # Handle --laundry option
+    if args.laundry:
+        print()
+        print("\033[1m\033[38;5;213mThis tool helps you decide if it's a suitable day for hanging laundry.\033[0m")
+        print("\033[38;5;213m______________________________________________________________________\033[0m")
+
+        city = input("Please enter the city (e.g., Bangkok): ").strip()  
+        target_time_str = input("Please enter the time (YYYY-MM-DD HH:MM:SS): ").strip()
+        
+        try:
+            target_time = datetime.strptime(target_time_str, "%Y-%m-%d %H:%M:%S")
+        except ValueError:
+            print("\033[31m\033[1mInvalid time format. Please use 'YYYY-MM-DD HH:MM:SS'.\033[0m")
+            return
+        
+        result = dryday_to_laundry(city, target_time)
+        print(result)
         return
 
     # Get location data

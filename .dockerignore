@@ -1,0 +1,28 @@
+# Exclude Python cache files
+*.pyc
+*.pyo
+__pycache__
+
+# Exclude Git directory
+.git
+.gitignore
+
+# Exclude temporary files and folders
+*.swp
+*.bak
+*.tmp
+*.log
+*.pid
+
+# Exclude build directories
+build/
+dist/
+*.egg-info/
+
+# Exclude virtual environment directories
+venv/
+.env/
+
+# Exclude Docker-related files
+Dockerfile*
+docker-compose.yml
