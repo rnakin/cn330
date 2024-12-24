@@ -1,4 +1,4 @@
-# Unified Command-Line Application: HowIs & Weather CLI
+# What's the weather 
 
 ## Overview
 
@@ -8,7 +8,7 @@
 
 ## Features
 
-### Weather Feature: Take Things Out
+### Take Things Out
 
 This feature provides recommendations for items to bring based on weather conditions, temperature, and time of day in any city.
 
@@ -53,8 +53,6 @@ This feature provides recommendations for items to bring based on weather condit
 ### Power Consumption Advisor CLI
 
 A feature-rich command-line tool for weather-based power consumption advice, cost estimation, and energy usage forecasts.
-
-#### Features
 
 1. **Power Consumption Advice**
    - Get energy usage recommendations based on current weather conditions.
@@ -120,13 +118,12 @@ A feature-rich command-line tool for weather-based power consumption advice, cos
 
 ---
 
-### HowIs: Weather & Location Finder
+### Weather & Location Finder from IP and Domain name
 
 A command-line tool to determine the location and current weather of a domain name, IPv4/IPv6 address, or city name.
 
 #### Features
 - Fetch current location and weather for a domain, IP address, or city.
-- Default input is a city (e.g., `London`) when no query is provided.
 - Special handling for IP addresses with the `--ip` flag.
 - List APIs and services used with the `--list` flag.
 - Display weather description, temperature, and humidity for the specified location.
