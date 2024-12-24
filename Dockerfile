@@ -1,14 +1,17 @@
-# ใช้ base image ของ Python
+# Use Python base image
 FROM python:3.9-slim
 
-# ตั้ง directory ใน Docker container สำหรับโปรเจค
+# Set the working directory in the Docker container for the project
 WORKDIR /app
 
-# คัดลอกไฟล์ทั้งหมดจากเครื่องของเราไปยัง Docker container
+# Copy all files from the local machine to the Docker container
 COPY . /app
 
-# ติดตั้ง dependencies จาก requirements.txt
+# Install dependencies from requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# รันโปรแกรม Python ของคุณ
-CMD ["python", "main.py"]
+# Make the wtw.sh script executable
+RUN chmod +x /app/wtw.sh
+
+# Set the entry point to the wtw.sh script
+CMD ["/app/wtw.sh"]
