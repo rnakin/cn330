@@ -2,7 +2,7 @@
 
 ## Overview
 
-**wtw** is versatile command-line tools designed to provide real-time weather data, location details, and weather-based advice. These tools leverage APIs like **OpenWeatherMap** and **ipgeolocation.io** to deliver accurate and actionable information to users.
+**HowIs** and the **Weather CLI** are versatile command-line tools designed to provide real-time weather data, location details, and weather-based advice. These tools leverage APIs like **OpenWeatherMap** and **ipgeolocation.io** to deliver accurate and actionable information to users.
 
 ---
 
@@ -176,6 +176,56 @@ A command-line tool to determine the location and current weather of a domain na
 
 ---
 
+### Dryday to Laundry
+
+A command-line tool to provide information for deciding whether the weather in your city and at your desired time is suitable for hanging laundry.
+
+- Fetches real-time weather forecast data at your city:
+  - Temperature (Celsius)
+  - Humidity (percent)
+  - Wind Speed (m/s)
+- Provide information on whether it will rain within 24 hours of the specified time to aid in laundry decisions.
+
+#### How to Use
+1. Run the script:
+   ```bash
+   python main.py --laundry
+   ```
+    **Output:**
+   ```bash
+   This tool helps you decide if it's a suitable day for hanging laundry.
+   _______________________________________________________
+   Please enter the city (e.g., Bangkok):
+   Please enter the time (YYYY-MM-DD HH:MM:SS):
+   ```
+2. Enter the time and the name of the city when prompted.
+
+
+#### Example Output
+
+- **YOU CAN HANG LAUNDRY:**
+  ```
+  This tool helps you decide if it's a suitable day for hanging laundry.
+  _________________________________________________________
+  Please enter the city (e.g., Bangkok): bangkok
+  Please enter the time (YYYY-MM-DD HH:MM:SS): 2024-12-24 16:00:00
+  >>>No rain within 24 hours from the specified time. YOU CAN HANG LAUNDRY!
+  Weather details
+  ___________________________
+  Temperature: 30.25°C
+  Humidity: 36%
+  Wind Speed: 1.51 m/s
+  ```
+- **YOU SHOULDN'T HANG LAUNDRY:**
+  ```
+  This tool helps you decide if it's a suitable day for hanging laundry.
+  _________________________________________________________
+  Please enter the city (e.g., Bangkok): brazil
+  Please enter the time (YYYY-MM-DD HH:MM:SS): 2024-12-24 17:00:00
+  >>>It will rain at 2024-12-25 06:00:00. It's NOT RECOMMENDED to hang laundry.  ```
+
+---
+
 ## Prerequisites
 
 1. Python 3.7 or later installed.
@@ -189,8 +239,8 @@ A command-line tool to determine the location and current weather of a domain na
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/rnakin/cn330.git
-   cd cn330
+   git clone https://github.com/yourusername/howis-cli.git
+   cd howis-cli
    ```
 
 2. Set up environment variables:
@@ -216,14 +266,14 @@ A command-line tool to determine the location and current weather of a domain na
 
 ### Build Docker Image
 ```bash
-docker build -t wtw .
+docker build -t howis-cli .
 ```
 
 ### Run Docker Container
 ```bash
 docker run --env IPGEO_API_KEY=your_ipgeolocation_api_key \
            --env WEATHER_API_KEY=your_openweathermap_api_key \
-           wtw google.com
+           howis-cli google.com
 ```
 
 ### Use Docker Compose
@@ -231,7 +281,7 @@ docker run --env IPGEO_API_KEY=your_ipgeolocation_api_key \
    ```yaml
    version: '3.8'
    services:
-     wtw:
+     howis:
        build: .
        environment:
          - IPGEO_API_KEY=your_ipgeolocation_api_key
@@ -245,7 +295,7 @@ docker run --env IPGEO_API_KEY=your_ipgeolocation_api_key \
 
 3. Run the application inside the container:
    ```bash
-   docker-compose run wtw google.com
+   docker-compose run howis google.com
    ```
 
 ---
