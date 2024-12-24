@@ -123,10 +123,10 @@ import argparse
 import requests
 import os
 from datetime import datetime
-from dotenv import load_dotenv
+
 from ns import get_ip ,is_ip
 from power_advisor import get_power_advice, forecast_advice, calculate_power_cost  # นำเข้าฟังก์ชัน
-
+from dotenv import load_dotenv
 load_dotenv() # will search for .env file in local folder and load variables 
 
 # API Endpoints
