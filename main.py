@@ -130,7 +130,7 @@ def main():
             handle_power_advice(city_name)
         if city_name and args.forecast_advice:
             handle_forecast_advice(city_name, args.days)
-        if city_name and args.carry:
+        if city_name and args.take_things:
             handle_carry(city_name)
     elif args.list:
         handle_list_option()
@@ -138,9 +138,7 @@ def main():
         handle_power_advice(args.query)
     elif args.forecast_advice:
         handle_forecast_advice(args.query, args.days)
-    elif args.calculate_cost:
-        handle_calculate_cost(args.rate, args.usage)
-    elif args.carry:
+    elif args.take_things:
         handle_carry(args.query)
 
 
