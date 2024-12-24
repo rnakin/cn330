@@ -2,7 +2,7 @@
 
 ## Overview
 
-**HowIs** and the **Weather CLI** are versatile command-line tools designed to provide real-time weather data, location details, and weather-based advice. These tools leverage APIs like **OpenWeatherMap** and **ipgeolocation.io** to deliver accurate and actionable information to users.
+**wtw** is versatile command-line tools designed to provide real-time weather data, location details, and weather-based advice. These tools leverage APIs like **OpenWeatherMap** and **ipgeolocation.io** to deliver accurate and actionable information to users.
 
 ---
 
@@ -189,8 +189,8 @@ A command-line tool to determine the location and current weather of a domain na
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/howis-cli.git
-   cd howis-cli
+   git clone https://github.com/rnakin/cn330.git
+   cd cn330
    ```
 
 2. Set up environment variables:
@@ -216,14 +216,14 @@ A command-line tool to determine the location and current weather of a domain na
 
 ### Build Docker Image
 ```bash
-docker build -t howis-cli .
+docker build -t wtw .
 ```
 
 ### Run Docker Container
 ```bash
 docker run --env IPGEO_API_KEY=your_ipgeolocation_api_key \
            --env WEATHER_API_KEY=your_openweathermap_api_key \
-           howis-cli google.com
+           wtw google.com
 ```
 
 ### Use Docker Compose
@@ -231,7 +231,7 @@ docker run --env IPGEO_API_KEY=your_ipgeolocation_api_key \
    ```yaml
    version: '3.8'
    services:
-     howis:
+     wtw:
        build: .
        environment:
          - IPGEO_API_KEY=your_ipgeolocation_api_key
@@ -245,7 +245,7 @@ docker run --env IPGEO_API_KEY=your_ipgeolocation_api_key \
 
 3. Run the application inside the container:
    ```bash
-   docker-compose run howis google.com
+   docker-compose run wtw google.com
    ```
 
 ---
