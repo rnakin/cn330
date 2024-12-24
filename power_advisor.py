@@ -1,7 +1,9 @@
 import requests
-import os
-
-API_KEY = os.environ.get("API_KEY")
+import os 
+from dotenv import load_dotenv
+load_dotenv() # will search for .env file in local folder and load variables 
+WEATHER_API_KEY = os.environ.get("WEATHER_API_KEY")
+API_KEY = WEATHER_API_KEY
 
 def fetch_weather(location):
     url = f"http://api.openweathermap.org/data/2.5/weather?q={location}&appid={API_KEY}&units=metric"
