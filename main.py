@@ -42,12 +42,30 @@ def format_output(domain, location_data, weather_data):
     country = location_data["country_name"]
     timezone_offset = location_data["time_zone"]["offset"]
 
-    domain = domain or "your location"
+    if domain == None:
+        domain = "your location"
     return (f"It is {description} at {domain}.\n"
             f"Located at: {city}, {country}\n"
             f"Temperature: {temp}°C, Humidity: {humidity}%\n"
             f"{time} GMT {timezone_offset}")
 
+def handle_ip_option(query, api_keys):
+    """Handle the --ip option."""
+    if not is_ip(query):
+        if query is not None:
+            query = get_ip(query)  # Resolve domain name to IP if it's not already an IP
+            if not query:
+                print("Error: Unable to resolve domain to an IP address.")
+                return
+
+    location_data = get_location_data(query, api_keys["IPGEO_API_KEY"])
+    if location_data:
+        lat, lon = location_data["latitude"], location_data["longitude"]
+        weather_data = get_weather_data(lat, lon, api_keys["WEATHER_API_KEY"])
+        if weather_data:
+            print(format_output(query, location_data, weather_data))
+            return location_data.get("city", "Unknown city")
+        
 def handle_list_option():
     """Handle the --list option."""
     print("Available services and APIs:")
@@ -88,21 +106,6 @@ def handle_laundry(query):
     else:
         print("Error: Please provide both --rate and --usage.")
 
-def handle_ip_option(query, api_keys):
-    """Handle the --ip option."""
-    if not is_ip(query):
-        query = get_ip(query)  # Resolve domain name to IP if it's not already an IP
-        if not query:
-            print("Error: Unable to resolve domain to an IP address.")
-            return
-
-    location_data = get_location_data(query, api_keys["IPGEO_API_KEY"])
-    if location_data:
-        lat, lon = location_data["latitude"], location_data["longitude"]
-        weather_data = get_weather_data(lat, lon, api_keys["WEATHER_API_KEY"])
-        if weather_data:
-            print(format_output(query, location_data, weather_data))
-            return location_data.get("city", "Unknown city")
 
 
 
