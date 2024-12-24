@@ -1,5 +1,6 @@
 from datetime import datetime as dt, timezone, timedelta
 import requests
+import os 
 from dotenv import load_dotenv
 load_dotenv() # will search for .env file in local folder and load variables 
 WEATHER_API_KEY = os.environ.get("WEATHER_API_KEY")

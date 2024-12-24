@@ -1,272 +1,148 @@
 import argparse
-import requests
 import os
 from datetime import datetime
 from dotenv import load_dotenv
+import requests
 from ns import get_ip, is_ip
-from dryday_to_laundry import dryday_to_laundry
+from power_advisor import get_power_advice, forecast_advice, calculate_power_cost
+from take_things_out import take_things_out
+def load_environment_variables():
+    """Load environment variables from .env file."""
+    load_dotenv()
+    return {
+        "IPGEO_API_KEY": os.environ.get("IPGEO_API_KEY"),
+        "WEATHER_API_KEY": os.environ.get("WEATHER_API_KEY"),
+    }
 
-load_dotenv()  # will search for .env file in local folder and load variables 
+def fetch_data(url, params):
+    """Helper function to make GET requests."""
+    response = requests.get(url, params=params)
+    if response.status_code == 200:
+        return response.json()
+    print(f"Error fetching data: {response.json().get('message')}")
+    return None
 
-# API Endpoints
-IPGEO_API_URL = "https://api.ipgeolocation.io/ipgeo"
-WEATHER_API_URL = "https://api.openweathermap.org/data/2.5/weather"
-
-# Fetch environment variables
-IPGEO_API_KEY = os.environ.get("IPGEO_API_KEY")
-WEATHER_API_KEY = os.environ.get("WEATHER_API_KEY")
-
-def get_location_data(query):
+def get_location_data(query, api_key):
     """Fetch location data using ipgeolocation.io API."""
-    params = {"apiKey": IPGEO_API_KEY, "ip": query}
-    response = requests.get(IPGEO_API_URL, params=params)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print(f"Error fetching location data: {response.json().get('message')}")
-        return None
+    params = {"apiKey": api_key, "ip": query}
+    return fetch_data("https://api.ipgeolocation.io/ipgeo", params)
 
-def get_weather_data(lat, lon):
+def get_weather_data(lat, lon, api_key):
     """Fetch weather data using OpenWeatherMap API."""
-    params = {"lat": lat, "lon": lon, "appid": WEATHER_API_KEY, "units": "metric"}
-    response = requests.get(WEATHER_API_URL, params=params)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print(f"Error fetching weather data: {response.json().get('message')}")
-        return None
+    params = {"lat": lat, "lon": lon, "appid": api_key, "units": "metric"}
+    return fetch_data("https://api.openweathermap.org/data/2.5/weather", params)
 
 def format_output(domain, location_data, weather_data):
-    """Format and display the output."""
+    """Format the output for display."""
     time = datetime.now().strftime("%H:%M %Z")
     description = weather_data["weather"][0]["description"].capitalize()
     temp = weather_data["main"]["temp"]
     humidity = weather_data["main"]["humidity"]
     city = location_data["city"]
     country = location_data["country_name"]
-    if domain is None:
-        domain = "your location"
-    text = f""" 
-    It is {description} at {domain}.
-    Located at: {city}, {country}
-    Temperature: {temp}°C, Humidity: {humidity}%
-    {time} GMT {location_data['time_zone']['offset']}
-    """
+    timezone_offset = location_data["time_zone"]["offset"]
 
-    return text
+    domain = domain or "your location"
+    return (f"It is {description} at {domain}.\n"
+            f"Located at: {city}, {country}\n"
+            f"Temperature: {temp}°C, Humidity: {humidity}%\n"
+            f"{time} GMT {timezone_offset}")
 
-def main():
+def handle_list_option():
+    """Handle the --list option."""
+    print("Available services and APIs:")
+    print("- ipgeolocation.io API for location data")
+    print("- OpenWeatherMap API for current weather data")
+    print("- Power advisor for energy consumption advice")
 
-    parser = argparse.ArgumentParser(
-        description="HowIs: A CLI tool to check location and weather of a domain/IP."
-    )
-    parser.add_argument(
-        "query",
-        nargs="?",
-        type=str,
-        help="Domain name, IPv4, or IPv6 address. Example: google.com or 8.8.8.8",
-    )
-    parser.add_argument(
-        "--now", action="store_true", help="Fetch current weather (default behavior)."
-    )
-    parser.add_argument(
-        "--list",
-        action="store_true",
-        help="List available services and APIs used in this application.",
-    )
-    parser.add_argument(
-        "--take_things", action="store_true", help="Check what items you should take out today. eg, umbrella, hat."
-    )
-    args = parser.parse_args()
-
-    # Handle --list option
-    if args.list:
-        print("Available services and APIs:")
-        print("- ipgeolocation.io API for location data")
-        print("- OpenWeatherMap API for current weather data")
-        print("- Check what items you should take out today. eg, umbrella, hat.")
-        return
-    
-    # Handle --take_things option
-    if args.take_things:
-        print()
-        print("\033[1m\033[38;5;213mThis tool helps you prepare things before go out.\033[0m")
-        print("\033[38;5;213m______________________________________________________________________\033[0m")
-        
-        city = input("Please enter the city (e.g., Bangkok): ").strip() 
-        
-        result = take_things_out(city)
-        print(result)
-        return
-
-    # Get location data
-    if is_ip(args.query):
-        location_data = get_location_data(args.query)
+def handle_carry(query):
+    if query:
+        print( take_things_out(query))
     else:
-        location_data = get_location_data(get_ip(args.query))
-    if not location_data:
-        return
-
-    # Get weather data
-    lat, lon = location_data["latitude"], location_data["longitude"]
-    weather_data = get_weather_data(lat, lon)
-    if not weather_data:
-        return
-
-    # Format output
-    text = format_output(args.query, location_data, weather_data)
-    print(text)
-
-if __name__ == "__main__":
-    main()
-import argparse
-import requests
-import os
-from datetime import datetime
-
-from ns import get_ip ,is_ip
-from power_advisor import get_power_advice, forecast_advice, calculate_power_cost  # นำเข้าฟังก์ชัน
-from dotenv import load_dotenv
-load_dotenv() # will search for .env file in local folder and load variables 
-
-# API Endpoints
-IPGEO_API_URL = "https://api.ipgeolocation.io/ipgeo"
-WEATHER_API_URL = "https://api.openweathermap.org/data/2.5/weather"
-
-# Fetch environment variables
-IPGEO_API_KEY = os.environ.get("IPGEO_API_KEY")
-WEATHER_API_KEY = os.environ.get("WEATHER_API_KEY")
-
-def get_location_data(query):
-    """Fetch location data using ipgeolocation.io API."""
-    params = {"apiKey": IPGEO_API_KEY, "ip": query}
-    response = requests.get(IPGEO_API_URL, params=params)
-    if response.status_code == 200:
-        return response.json()
+        print("Error: Please provide a location.")
+def handle_power_advice(query):
+    """Handle the --power-advice option."""
+    if query:
+        print(get_power_advice(query))
     else:
-        print(f"Error fetching location data: {response.json().get('message')}")
-        return None
+        print("Error: Please provide a location.")
 
-def get_weather_data(lat, lon):
-    """Fetch weather data using OpenWeatherMap API."""
-    params = {"lat": lat, "lon": lon, "appid": WEATHER_API_KEY, "units": "metric"}
-    response = requests.get(WEATHER_API_URL, params=params)
-    if response.status_code == 200:
-        return response.json()
+def handle_forecast_advice(query, days):
+    """Handle the --forecast-advice option."""
+    if query:
+        print(forecast_advice(query, days=days))
     else:
-        print(f"Error fetching weather data: {response.json().get('message')}")
-        return None
+        print("Error: Please provide a location.")
 
-def format_output(domain, location_data, weather_data):
-    """Format and display the output."""
-    time = datetime.now().strftime("%H:%M %Z")
-    description = weather_data["weather"][0]["description"].capitalize()
-    temp = weather_data["main"]["temp"]
-    humidity = weather_data["main"]["humidity"]
-    city = location_data["city"]
-    country = location_data["country_name"]
-    if domain is None:
-        domain = "your location"
-    text = f""" 
-    It is {description} at {domain}.
-    Located at: {city}, {country}
-    Temperature: {temp}°C, Humidity: {humidity}%
-    {time} GMT {location_data['time_zone']['offset']}
-    """
+def handle_calculate_cost(rate, usage):
+    """Handle the --calculate-cost option."""
+    if rate and usage:
+        print(calculate_power_cost(rate, usage))
+    else:
+        print("Error: Please provide both --rate and --usage.")
 
-    return text
+def handle_laundry(query):
+    """Handle the --calculate-cost option."""
+    if rate and usage:
+        print(dryday_to_laundry(city, target_time, api_key=API_KEY))
+    else:
+        print("Error: Please provide both --rate and --usage.")
 
-def main():
-
-    parser = argparse.ArgumentParser(
-        description="HowIs: A CLI tool to check location and weather of a domain/IP."
-    )
-    parser.add_argument(
-        "query",
-        nargs="?",
-        type=str,
-        help="Domain name, IPv4, or IPv6 address. Example: google.com or 8.8.8.8",
-    )
-    parser.add_argument(
-        "--ip", action="store_true", help="Fetch current weather (default behavior)."
-    )
-    parser.add_argument(
-        "--list",
-        action="store_true",
-        help="List available services and APIs used in this application.",
-    )
-    parser.add_argument(
-        "--test", action="store_true", help="testing"
-    )
-    parser.add_argument(
-        "--power-advice", action="store_true", help="Get energy advice based on current weather."
-    )
-    parser.add_argument(
-        "--forecast-advice", action="store_true", help="Get forecast advice for energy consumption."
-    )
-    parser.add_argument(
-        "--calculate-cost", action="store_true", help="Calculate power costs based on device usage."
-    )
-    parser.add_argument(
-        "--rate", type=float, help="Electricity rate in USD/unit (for --calculate-cost)."
-    )
-    parser.add_argument(
-        "--usage", type=str, help="Device usage in format 'Device:Hours,Device:Hours' (for --calculate-cost)."
-    )
-    parser.add_argument(
-        "--days", type=int, help="Number of days to forecast (used with --forecast-advice)."
-    )
-    args = parser.parse_args()
-
-    # Handle --list option
-    if args.list:
-        print("Available services and APIs:")
-        print("- ipgeolocation.io API for location data")
-        print("- OpenWeatherMap API for current weather data")
-        return
-
-    # Handle --power-advice option
-    if args.power_advice:
-        if args.query:
-            print(get_power_advice(args.query))
-        else:
-            print("Error: Please provide a location.")
-        return
-
-    # Handle --forecast-advice option
-    if args.forecast_advice:
-        if args.query:
-            days = args.days if args.days else None  # ใช้ args.days ถ้ามีการกำหนด
-            print(forecast_advice(args.query, days=days))
-        else:
-            print("Error: Please provide a location.")
-        return
-
-    # Handle --calculate-cost option
-    if args.calculate_cost:
-        if args.rate and args.usage:
-            print(calculate_power_cost(args.rate, args.usage))
-        else:
-            print("Error: Please provide both --rate and --usage.")
-        return
-
-   # Handle --ip option
-    if args.ip:
-        if not is_ip(args.query):
-            print("Error: --ip requires an IP address as the query.")
+def handle_ip_option(query, api_keys):
+    """Handle the --ip option."""
+    if not is_ip(query):
+        query = get_ip(query)  # Resolve domain name to IP if it's not already an IP
+        if not query:
+            print("Error: Unable to resolve domain to an IP address.")
             return
-        location_data = get_location_data(args.query)
-        if not location_data:
-            return
-        # Get weather data
+
+    location_data = get_location_data(query, api_keys["IPGEO_API_KEY"])
+    if location_data:
         lat, lon = location_data["latitude"], location_data["longitude"]
-        weather_data = get_weather_data(lat, lon)
-        if not weather_data:
-            return
-        # Format output
-        text = format_output(args.query, location_data, weather_data)
-        print(text)
-        return
+        weather_data = get_weather_data(lat, lon, api_keys["WEATHER_API_KEY"])
+        if weather_data:
+            print(format_output(query, location_data, weather_data))
+            return location_data.get("city", "Unknown city")
+
+
+
+def main():
+    api_keys = load_environment_variables()
+
+    parser = argparse.ArgumentParser(
+        description="HowIs: A CLI tool to check location and weather of a domain/IP."
+    )
+    parser.add_argument("query", nargs="?", type=str, help="Domain name, IPv4, or IPv6 address.")
+    parser.add_argument("--list", action="store_true", help="List available services and APIs.")
+    parser.add_argument("--power-advice", action="store_true", help="Get energy advice based on current weather.")
+    parser.add_argument("--forecast-advice", action="store_true", help="Get forecast advice for energy consumption.")
+    parser.add_argument("--calculate-cost", action="store_true", help="Calculate power costs based on device usage.")
+    parser.add_argument("--rate", type=float, help="Electricity rate in USD/unit (for --calculate-cost).")
+    parser.add_argument("--usage", type=str, help="Device usage in format 'Device:Hours,Device:Hours' (for --calculate-cost).")
+    parser.add_argument("--days", type=int, help="Number of days to forecast (used with --forecast-advice).")
+    parser.add_argument("--ip", action="store_true", help="Fetch current weather for the provided IP or domain.")
+    parser.add_argument("--carry", action="store_true", help="Recommend Item that should be carry in the weather.")
+    parser.add_argument("--laundry", action="store_true", help="")
+    args = parser.parse_args()
+    if args.ip:
+        city_name = handle_ip_option(args.query, api_keys)  
+        if city_name and args.power_advice:
+            handle_power_advice(city_name)
+        if city_name and args.forecast_advice:
+            handle_forecast_advice(city_name, args.days)
+        if city_name and args.carry:
+            handle_carry(city_name)
+    elif args.list:
+        handle_list_option()
+    elif args.power_advice:
+        handle_power_advice(args.query)
+    elif args.forecast_advice:
+        handle_forecast_advice(args.query, args.days)
+    elif args.calculate_cost:
+        handle_calculate_cost(args.rate, args.usage)
+    elif args.carry:
+        handle_carry(args.query)
+
 
 if __name__ == "__main__":
     main()
