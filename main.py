@@ -250,23 +250,23 @@ def main():
             print("Error: Please provide both --rate and --usage.")
         return
 
-    # Get location data
-    if is_ip(args.query):
+   # Handle --ip option
+    if args.ip:
+        if not is_ip(args.query):
+            print("Error: --ip requires an IP address as the query.")
+            return
         location_data = get_location_data(args.query)
-    else:
-        location_data = get_location_data(get_ip(args.query))
-    if not location_data:
+        if not location_data:
+            return
+        # Get weather data
+        lat, lon = location_data["latitude"], location_data["longitude"]
+        weather_data = get_weather_data(lat, lon)
+        if not weather_data:
+            return
+        # Format output
+        text = format_output(args.query, location_data, weather_data)
+        print(text)
         return
-
-    # Get weather data
-    lat, lon = location_data["latitude"], location_data["longitude"]
-    weather_data = get_weather_data(lat, lon)
-    if not weather_data:
-        return
-
-    # Format output
-    text = format_output(args.query, location_data, weather_data)
-    print(text)
 
 if __name__ == "__main__":
     main()
