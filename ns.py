@@ -28,7 +28,3 @@ def is_ip(address):
         return True
     except:
         return False
-<<<<<<< HEAD
-
-=======
->>>>>>> 5ae8c0775dccbfae0801b7d60e9b84bcd090b3db
