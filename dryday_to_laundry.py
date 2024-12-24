@@ -1,7 +1,10 @@
 import requests
 from datetime import datetime, timedelta
+import os
+WEATHER_API_KEY = os.environ.get("WEATHER_API_KEY")
+API_KEY = WEATHER_API_KEY
 
-def dryday_to_laundry(city, target_time, api_key="fdd3143d85fe49adb9448b7c17907b47"):
+def dryday_to_laundry(city, target_time, api_key=API_KEY):
     url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}&units=metric"
     response = requests.get(url)
 
