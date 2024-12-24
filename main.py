@@ -188,7 +188,7 @@ def main():
         help="Domain name, IPv4, or IPv6 address. Example: google.com or 8.8.8.8",
     )
     parser.add_argument(
-        "--now", action="store_true", help="Fetch current weather (default behavior)."
+        "--ip", action="store_true", help="Fetch current weather (default behavior)."
     )
     parser.add_argument(
         "--list",
