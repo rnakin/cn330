@@ -1,0 +1,8 @@
+# Source files
+# ============
+
+*.py        text diff=python
+*.txt       text
+AUTHORS     text 
+LICENSE     text
+*.gitignore text
