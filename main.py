@@ -6,6 +6,8 @@ import requests
 from ns import get_ip, is_ip
 from power_advisor import get_power_advice, forecast_advice, calculate_power_cost
 from take_things_out import take_things_out
+from dryday_to_laundry import dryday_to_laundry
+
 def load_environment_variables():
     """Load environment variables from .env file."""
     load_dotenv()
@@ -152,7 +154,7 @@ def main():
         print("- Check what items you should take out today. eg, umbrella, hat.")
         print("- Check if it's a good day to hang laundry")
         return
-    
+
     # Handle --take_things option
     if args.take_things:
         print()
@@ -164,21 +166,26 @@ def main():
         result = take_things_out(city)
         print(result)
         return
-    
-    # Handle --laundry option
+
+
+# Handle --laundry option
     if args.laundry:
         print()
         print("\033[1m\033[38;5;213mThis tool helps you decide if it's a suitable day for hanging laundry.\033[0m")
         print("\033[38;5;213m______________________________________________________________________\033[0m")
 
-        city = input("Please enter the city (e.g., Bangkok): ").strip()  
-        target_time_str = input("Please enter the time (YYYY-MM-DD HH:MM:SS): ").strip()
+        city = input("Please enter the city (e.g. Bangkok): ").strip()  
+        target_time_str = input("Please enter the time (YYYY-MM-DD HH:MM:SS) or ENTER if you want current time: ").strip()
 
-        try:
-            target_time = datetime.strptime(target_time_str, "%Y-%m-%d %H:%M:%S")
-        except ValueError:
-            print("\033[31m\033[1mInvalid time format. Please use 'YYYY-MM-DD HH:MM:SS'.\033[0m")
-            return
+        if not target_time_str:  # If no time is provided, use current time
+            target_time = datetime.now()
+            print("\033[38;5;213mNo time entered. Using current time: {}\033[0m".format(target_time.strftime("%Y-%m-%d %H:%M:%S")))
+        else:
+            try:
+                target_time = datetime.strptime(target_time_str, "%Y-%m-%d %H:%M:%S")
+            except ValueError:
+                print("\033[31m\033[1mInvalid time format. Please use 'YYYY-MM-DD HH:MM:SS'.\033[0m")
+                return
 
         result = dryday_to_laundry(city, target_time)
         print(result)
