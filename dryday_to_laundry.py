@@ -22,10 +22,19 @@ def dryday_to_laundry(city, target_time):
             forecast_dt = datetime.utcfromtimestamp(forecast['dt'])
 
             if forecast_dt >= target_time and forecast_dt <= forecast_time:
-                # If it rains during the specified time
+                 # If it rains during the specified time
                 weather_description = forecast['weather'][0]['description']
                 if 'rain' in weather_description.lower():
-                   return f"\033[31m\033[1m>>>It will rain at {forecast_dt}. It's NOT RECOMMENDED to hang laundry.\033[0m"
+                    # Find the next time it will stop raining
+                    for next_forecast in data['list']:
+                        next_forecast_dt = datetime.utcfromtimestamp(next_forecast['dt'])
+                        if next_forecast_dt > forecast_dt:
+                            next_weather_description = next_forecast['weather'][0]['description']
+                            if 'rain' not in next_weather_description.lower():
+                                # Found the next time it will stop raining
+                                stop_rain_time = next_forecast_dt.strftime("%Y-%m-%d %H:%M:%S")
+                                return f"\033[31m\033[1m>>>It will rain at {forecast_dt}. It's NOT RECOMMENDED to hang laundry.\033[0m" \
+                                       f"\033[93m\nThe next time you can hang laundry is at {stop_rain_time}.\033[0m"
 
 
         # If no rain found in the forecast period
