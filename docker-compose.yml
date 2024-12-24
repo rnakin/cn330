@@ -1,15 +1,13 @@
-version: "3.8"
+# docker-compose.yml
+version: "3.9"
 
 services:
-  wtw-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  wtw:
+    build: .
+    container_name: wtw
     environment:
-      - IPGEO_API_KEY=your_ipgeolocation_api_key
-      - WEATHER_API_KEY=your_openweathermap_api_key
-    stdin_open: true  # interactive mode
-    tty: true         # interactive shell
-    command: bash     # Start with an interactive shell
+      - IPGEO_API_KEY=${IPGEO_API_KEY}
+      - WEATHER_API_KEY=${WEATHER_API_KEY}
     volumes:
-      - .:/app  # Mount the current directory to /app 
+      - .:/app
+    command: ["--ip"]
