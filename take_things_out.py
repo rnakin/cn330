@@ -1,8 +1,12 @@
 from datetime import datetime as dt, timezone, timedelta
 import requests
-
+import os 
+from dotenv import load_dotenv
+load_dotenv() # will search for .env file in local folder and load variables 
+WEATHER_API_KEY = os.environ.get("WEATHER_API_KEY")
+API_KEY = WEATHER_API_KEY
 # main function
-def take_things_out(city, api_key="9629b97c0926236b2c767c4c09ec7086"):
+def take_things_out(city, api_key=API_KEY):
     BASE_URL = "http://api.openweathermap.org/data/2.5/weather?"
 
     url = f"{BASE_URL}appid={api_key}&q={city}&units=metric"

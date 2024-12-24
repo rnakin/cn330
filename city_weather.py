@@ -1,4 +1,9 @@
 import requests
+from dotenv import load_dotenv
+import os
+load_dotenv() # will search for .env file in local folder and load variables 
+WEATHER_API_KEY = os.environ.get("WEATHER_API_KEY")
+API_KEY = WEATHER_API_KEY
 
 def get_weather_by_city(city, api_key):
     # URL ของ OpenWeatherMap API สำหรับสภาพอากาศตามชื่อเมือง
@@ -26,6 +31,6 @@ def get_weather_by_city(city, api_key):
 
 if __name__ == "__main__":
     # ใส่ API Key ของคุณที่นี่
-    api_key = "fdd3143d85fe49adb9448b7c17907b47"
+    api_key = API_KEY
     city = input("Enter city name: ")
     get_weather_by_city(city, api_key)

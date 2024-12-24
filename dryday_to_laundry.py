@@ -1,16 +1,15 @@
 import requests
 from datetime import datetime, timedelta
-
 import os
 from dotenv import load_dotenv
-
-load_dotenv()
+load_dotenv() # will search for .env file in local folder and load variables 
+WEATHER_API_KEY = os.environ.get("WEATHER_API_KEY")
+API_KEY = WEATHER_API_KEY
 
 def dryday_to_laundry(city, target_time):
     api_key = os.getenv("DRYDAY_API_KEY")
     if not api_key:
         raise ValueError("API key is missing. Please check your .env file.")
-    
     url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}&units=metric"
     response = requests.get(url)
 

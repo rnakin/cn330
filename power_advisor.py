@@ -1,7 +1,10 @@
+
 import requests
-
-API_KEY = "44c5e66627efa3057184a1b9ede5618b"
-
+import os 
+from dotenv import load_dotenv
+load_dotenv() # will search for .env file in local folder and load variables 
+WEATHER_API_KEY = os.environ.get("WEATHER_API_KEY")
+API_KEY = WEATHER_API_KEY
 def fetch_weather(location):
     url = f"http://api.openweathermap.org/data/2.5/weather?q={location}&appid={API_KEY}&units=metric"
     response = requests.get(url)
@@ -9,14 +12,6 @@ def fetch_weather(location):
         return response.json()
     else:
         raise Exception(f"Failed to fetch weather data: {response.status_code}")
-
-def fetch_forecast(location):
-    url = f"http://api.openweathermap.org/data/2.5/forecast?q={location}&appid={API_KEY}&units=metric"
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        raise Exception(f"Failed to fetch forecast data: {response.status_code}")
 
 def get_power_advice(location, show_temp=False, show_humidity=False):
     weather_data = fetch_weather(location)
