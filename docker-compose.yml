@@ -1,7 +1,15 @@
-version: '3.8'
+version: "3.8"
+
 services:
-  wtw:
-    build: .
+  wtw-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
       - IPGEO_API_KEY=your_ipgeolocation_api_key
       - WEATHER_API_KEY=your_openweathermap_api_key
+    stdin_open: true  # interactive mode
+    tty: true         # interactive shell
+    command: bash     # Start with an interactive shell
+    volumes:
+      - .:/app  # Mount the current directory to /app 
